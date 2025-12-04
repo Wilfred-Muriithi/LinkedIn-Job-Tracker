@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinkedIn Job Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            color: #e5e7eb;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 16px;
+            padding: 24px 28px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: #f9fafb;
+        }
+        p.lead {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.35rem;
+            color: #e5e7eb;
+        }
+        textarea, input[type="email"] {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            background: rgba(15, 23, 42, 0.75);
+            color: #e5e7eb;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 70px;
+        }
+        input[type="email"] {
+            min-height: 0;
+        }
+        textarea:focus, input[type="email"]:focus {
+            outline: none;
+            border-color: #22c55e;
+            box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+        }
+        .hint {
+            font-size: 0.78rem;
+            color: #9ca3af;
+            margin-top: 0.15rem;
+        }
+        .field {
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+            color: #022c22;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+        .btn-primary:hover {
+            filter: brightness(1.05);
+        }
+        .errors {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.6);
+            color: #fecaca;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            margin-bottom: 0.9rem;
+        }
+        .errors ul {
+            padding-left: 1.1rem;
+            margin: 0;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(34,197,94,0.15);
+            color: #bbf7d0;
+            border: 1px solid rgba(34,197,94,0.4);
+            margin-bottom: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="badge">
+            <span>●</span>
+            Live LinkedIn job tracker
+        </div>
+        <h1>Get jobs that match your skills</h1>
+        <p class="lead">
+            Paste your core skills and target locations. We’ll search LinkedIn,
+            log new roles to your Google Sheet, and email you the matches.
+        </p>
+
+        {% if errors %}
+            <div class="errors">
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="field">
+                <label for="skills">Skills / keywords</label>
+                <textarea id="skills" name="skills" placeholder="e.g. Microsoft Fabric, Power BI, Azure Data Engineer, ETL"
+                >{{ skills_value or '' }}</textarea>
+                <div class="hint">Comma-separated list. We’ll create combinations with each location.</div>
+            </div>
+
+            <div class="field">
+                <label for="locations">Locations</label>
+                <textarea id="locations" name="locations" placeholder="e.g. Remote, Kenya, Europe"
+                >{{ locations_value or '' }}</textarea>
+                <div class="hint">Also comma-separated. Include “Remote” to search fully-remote roles.</div>
+            </div>
+
+            <div class="field">
+                <label for="email">Where should we send the jobs?</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    value="{{ email_value or '' }}"
+                    required
+                />
+            </div>
+
+            <button class="btn-primary" type="submit">
+                Run LinkedIn search
+            </button>
+        </form>
+    </div>
+</body>
+</html>
+
+
+

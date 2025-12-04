@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinkedIn Job Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, rgba(56,189,248,0.15), transparent 45%),
+                        radial-gradient(circle at right, rgba(34,197,94,0.12), transparent 40%),
+                        #020617;
+            color: #f1f5f9;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 20px;
+            padding: 28px 32px;
+            width: min(520px, 100%);
+            box-shadow: 0 30px 70px rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(16px);
+        }
+        h1 {
+            margin: 0 0 0.4rem 0;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+        }
+        p.lead {
+            margin: 0 0 1.5rem 0;
+            color: #cbd5f5;
+            line-height: 1.5;
+        }
+        label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 0.35rem;
+            display: block;
+        }
+        textarea,
+        input[type="email"] {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(2, 6, 23, 0.65);
+            color: #f8fafc;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 76px;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        input[type="email"] {
+            min-height: 0;
+        }
+        textarea:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: rgba(34, 197, 94, 0.9);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+        }
+        .hint {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 0.2rem;
+        }
+        .field {
+            margin-bottom: 1.15rem;
+        }
+        button {
+            width: 100%;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            margin-top: 0.5rem;
+            background: linear-gradient(135deg, #34d399, #22d3ee);
+            color: #022c22;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        button:not(:disabled):hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(45, 212, 191, 0.35);
+        }
+        .toast {
+            margin-top: 1rem;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .toast.success {
+            background: rgba(22, 163, 74, 0.15);
+            color: #bbf7d0;
+            border: 1px solid rgba(22, 163, 74, 0.5);
+        }
+        .toast.error {
+            background: rgba(248, 113, 113, 0.12);
+            color: #fecaca;
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #c7d2fe;
+            background: rgba(67, 56, 202, 0.25);
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            margin-bottom: 1rem;
+        }
+        code {
+            background: rgba(15,23,42,0.8);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="badge">Live LinkedIn tracker</div>
+        <h1>Send job alerts to your inbox</h1>
+        <p class="lead">
+            This form calls your hosted backend. It searches LinkedIn for every
+            skill/location combo, logs new roles into Google Sheets, and emails the matches.
+        </p>
+
+        <form id="job-form">
+            <div class="field">
+                <label for="skills">Skills / keywords</label>
+                <textarea id="skills" name="skills" placeholder="e.g. Microsoft Fabric, Power BI, Azure Data Engineer"></textarea>
+                <div class="hint">Comma-separated list. Each skill is paired with every location.</div>
+            </div>
+
+            <div class="field">
+                <label for="locations">Locations</label>
+                <textarea id="locations" name="locations" placeholder="e.g. Remote, Kenya, Anywhere"></textarea>
+                <div class="hint">Comma-separated. Include “Remote” for global remote roles.</div>
+            </div>
+
+            <div class="field">
+                <label for="email">Alert email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required />
+                <div class="hint">The backend will send job summaries to this address.</div>
+            </div>
+
+            <button type="submit" id="submit-btn">
+                <span id="btn-label">Run LinkedIn search</span>
+            </button>
+        </form>
+
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const form = document.getElementById("job-form");
+        const toast = document.getElementById("toast");
+        const submitBtn = document.getElementById("submit-btn");
+        const btnLabel = document.getElementById("btn-label");
+
+        function showToast(message, type = "success") {
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.style.display = "block";
+        }
+
+        function hideToast() {
+            toast.style.display = "none";
+        }
+
+        function getBackendUrl() {
+            if (!window.BACKEND_URL) {
+                throw new Error("BACKEND_URL is not defined. Edit frontend/config.js.");
+            }
+            return window.BACKEND_URL;
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            hideToast();
+
+            submitBtn.disabled = true;
+            btnLabel.textContent = "Searching…";
+
+            const payload = {
+                skills: document.getElementById("skills").value,
+                locations: document.getElementById("locations").value,
+                email: document.getElementById("email").value.trim(),
+            };
+
+            try {
+                const response = await fetch(getBackendUrl(), {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    const message = result?.errors?.join(" • ") || result?.error || "Something went wrong.";
+                    showToast(message, "error");
+                } else {
+                    const total = result.total_new ?? 0;
+                    const emailSent = result.email_sent ? "Email sent." : "No new jobs, email skipped.";
+                    showToast(`Saved ${total} new job${total === 1 ? "" : "s"}. ${emailSent}`, "success");
+                    form.reset();
+                }
+            } catch (error) {
+                console.error(error);
+                showToast(error.message || "Network error.", "error");
+            } finally {
+                submitBtn.disabled = false;
+                btnLabel.textContent = "Run LinkedIn search";
+            }
+        });
+    </script>
+</body>
+</html>
+
+

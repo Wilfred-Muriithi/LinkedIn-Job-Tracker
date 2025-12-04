@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results – LinkedIn Job Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            color: #e5e7eb;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 16px;
+            padding: 24px 28px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            text-align: left;
+        }
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            color: #f9fafb;
+        }
+        p {
+            font-size: 0.95rem;
+            color: #9ca3af;
+        }
+        .stat {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #bbf7d0;
+            margin: 0.6rem 0 0.2rem;
+        }
+        a.btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #e5e7eb;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-top: 1.2rem;
+        }
+        a.btn-secondary:hover {
+            background: rgba(15, 23, 42, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Search complete ✅</h1>
+        <p class="stat">{{ total_new }} new job{{ '' if total_new == 1 else 's' }} saved</p>
+        <p>
+            We’ve logged new roles into your Google Sheet and sent a job summary to
+            <strong>{{ email }}</strong>.
+        </p>
+        <p>
+            If you don’t see the email in a couple of minutes, check your spam folder or
+            confirm your email configuration in <code>.env</code>.
+        </p>
+
+        <a href="/" class="btn-secondary">Run another search</a>
+    </div>
+</body>
+</html>
+
+
+

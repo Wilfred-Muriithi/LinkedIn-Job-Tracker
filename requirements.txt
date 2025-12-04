@@ -1,0 +1,11 @@
+Flask
+flask-cors
+httpx
+beautifulsoup4
+lxml
+gspread
+oauth2client
+python-dotenv
+
+
+
