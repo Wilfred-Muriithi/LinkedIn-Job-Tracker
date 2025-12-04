@@ -1,2 +1,2 @@
-window.BACKEND_URL = "http://localhost:5000/api/search";
+window.BACKEND_URL = "https://linkedin-job-tracker-u1k1.onrender.com/api/search";
 
