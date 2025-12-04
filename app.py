@@ -23,6 +23,19 @@ def health():
     return jsonify({"status": "ok"})
 
 
+@app.get("/")
+def root():
+    return jsonify(
+        {
+            "message": "LinkedIn Job Tracker API is running.",
+            "endpoints": {
+                "health": "/health",
+                "search": "/api/search",
+            },
+        }
+    )
+
+
 @app.post("/api/search")
 def api_search():
     try:
