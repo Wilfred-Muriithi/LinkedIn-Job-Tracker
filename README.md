@@ -107,5 +107,4 @@ Whenever you update the frontend, push again and Pages will redeploy.
 - Queue searches (Celery/Redis) if you expect high traffic.
 - Allow recurring alerts per user instead of manual triggers.
 
-Let me know if you want automation scripts for deploying to Render or a GitHub workflow to publish the frontend automatically.
 
